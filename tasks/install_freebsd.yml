@@ -1,0 +1,10 @@
+---
+# tasks file for bootstrap_salt FreeBSD specific install
+- name: Install on FreeBSD
+  pkgng:
+    name: py27-salt
+    state: present
+  become: "yes"
+  notify:
+    - configure salt_minion
+    - restart salt_minion

@@ -1,0 +1,26 @@
+---
+# tasks file for ubuntu specific installation
+- name: Add apt key for ubuntu
+  apt_key:
+    url: https://repo.saltstack.com/apt/{{ ansible_distribution | lower }}/{{ ansible_distribution_version }}/amd64/latest/SALTSTACK-GPG-KEY.pub
+    state: present
+  become: "yes"
+  when: ansible_distribution == "Ubuntu"
+
+- name: Add apt repo for Ubuntu
+  copy:
+    dest: /etc/apt/sources.list.d/saltstack.list
+    content: |
+      deb http://repo.saltstack.com/apt/{{ ansible_distribution | lower }}/{{ ansible_distribution_version }}/amd64/latest {{ ansible_distribution_release }} main
+  become: "yes"
+  when: ansible_distribution == "Ubuntu"
+
+- name: Install via Apt
+  apt:
+    name: salt-minion
+    state: present
+    update_cache: "yes"
+  become: "yes"
+  notify:
+    - configure salt-minion
+    - restart salt-minion

@@ -1,0 +1,33 @@
+---
+# handlers for salt-minion service
+# FreeBSD names service salt_minion, hence two
+# Adds read permission to minion config to allow molecule tests on RHEL based systems, which result in 0600 config.
+# Should be updated and managed by salt anyway.
+- name: configure salt-minion
+  copy:
+    dest: /etc/salt/minion
+    content: |
+      master: "{{ salt_master }}"
+    mode: 0644
+  become: "yes"
+
+- name: restart salt-minion
+  service:
+    name: salt-minion
+    enabled: "yes"
+    state: restarted
+  become: "yes"
+
+- name: configure salt_minion
+  copy:
+    dest: /usr/local/etc/salt/minion
+    content: |
+      master: "{{ salt_master }}"
+  become: "yes"
+
+- name: restart salt_minion
+  service:
+    name: salt_minion
+    enabled: "yes"
+    state: restarted
+  become: "yes"

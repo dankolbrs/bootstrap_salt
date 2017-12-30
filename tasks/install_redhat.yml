@@ -1,0 +1,36 @@
+---
+# tasks file for bootstrap_salt Cent/Fedora specifics
+- name: Add repo for CentOS
+  yum:
+    name: https://repo.saltstack.com/yum/redhat/salt-repo-latest-2.el7.noarch.rpm
+    state: present
+    update_cache: "yes"
+  become: "yes"
+  when: ansible_distribution == "CentOS"
+
+- name: Add required libraries for Fedora
+  raw: "yum install -y python2-rpm python2-dnf libselinux-python"
+  become: "yes"
+  when: ansible_distribution == "Fedora"
+  changed_when: false
+
+- name: Install on Fedora
+  dnf:
+    name: salt-minion
+    state: present
+  become: "yes"
+  when: ansible_distribution == "Fedora"
+  notify:
+    - configure salt-minion
+    - restart salt-minion
+
+- name: Install on CentOS
+  yum:
+    name: salt-minion
+    state: present
+    update_cache: "yes"
+  become: "yes"
+  when: ansible_distribution == "CentOS"
+  notify:
+    - configure salt-minion
+    - restart salt-minion

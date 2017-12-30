@@ -1,0 +1,13 @@
+---
+# tasks file for bootstrap_salt, imports based on host distribution
+- import_tasks: install_redhat.yml
+  when: ansible_distribution == "CentOS" or ansible_distribution == "Fedora"
+
+- import_tasks: install_ubuntu.yml
+  when: ansible_distribution == "Ubuntu"
+
+- import_tasks: install_debian.yml
+  when: ansible_distribution == "Debian"
+
+- import_tasks: install_freebsd.yml
+  when: ansible_distribution == "FreeBSD"

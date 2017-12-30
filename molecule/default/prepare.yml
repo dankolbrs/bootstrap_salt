@@ -1,0 +1,10 @@
+---
+- name: Prepare
+  hosts: all
+  gather_facts: false
+  # Hackish as this only works and is needed on *some* Ubuntu images
+  tasks:
+    - name: Install python for Ansible
+      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal) || return 0
+      become: true
+      changed_when: false
